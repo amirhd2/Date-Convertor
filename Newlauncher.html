@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه لانچر برنامه‌ها</title>
+    <!-- Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a2e; /* پس‌زمینه تیره اصلی */
+            color: #e0e0e0; /* رنگ متن روشن */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* استایل برای دکمه‌های لانچر مطابق با تصویر */
+        .app-button {
+            background-color: #2a2a4a; /* رنگ پس‌زمینه کارت */
+            border: 1px solid rgba(100, 100, 200, 0.3); /* مرز ملایم */
+            border-radius: 20px; /* لبه‌های گردتر */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* سایه عمیق‌تر */
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: right;
+            padding: 24px; /* فضای داخلی بیشتر */
+        }
+
+        .app-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(130, 80, 220, 0.7); /* سایه و درخشش هنگام هاور */
+        }
+
+        .app-button h2 {
+            color: #ffffff; /* عنوان دکمه سفید */
+            font-weight: 700;
+        }
+
+        .app-button p {
+            color: #b0b0d0; /* متن توضیحات ملایم‌تر */
+        }
+
+        .app-button span {
+            font-size: 2.5rem; /* اندازه آیکون‌ها بزرگتر */
+            margin-bottom: 12px;
+        }
+
+        /* گرادیانت برای عنوان اصلی */
+        .gradient-text {
+            background: linear-gradient(90deg, #a78bfa, #8b5cf6); /* گرادیانت بنفش */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent; /* fallback for non-webkit */
+            font-weight: 900;
+        }
+
+        /* استایل نوار بالا و دکمه بازگشت در نمای iFrame */
+        #iframe-view header {
+            background-color: #2a2a4a; /* رنگ تیره برای هدر */
+            border-bottom: 1px solid rgba(100, 100, 200, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #back-button {
+            background: linear-gradient(90deg, #8b5cf6, #c084fc); /* گرادیانت برای دکمه بازگشت */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 15px; /* لبه‌های گرد */
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(192, 132, 252, 0.8);
+        }
+
+        #back-button svg {
+            stroke: white; /* رنگ آیکون سفید */
+        }
+
+        #iframe-title {
+            color: #e0e0e0; /* رنگ عنوان در هدر روشن */
+        }
+
+        #content-iframe {
+            width: 100%;
+            height: calc(100vh - 80px); /* منهای ارتفاع نوار بالا */
+            border: none;
+            background-color: #1a1a2e; /* پس‌زمینه iFrame هم تیره */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- صفحه اصلی - نمایش دکمه‌های لانچر --><div id="launcher-view" class="p-8 flex flex-col items-center justify-center min-h-screen">
+        <h1 class="text-5xl mb-12 gradient-text">لانچر برنامه‌های من</h1>
+        <p class="text-xl text-gray-400 mb-10 text-center max-w-xl">
+            برای استفاده از هر یک از ابزارهای زیر، روی کارت مربوطه کلیک کنید.
+        </p>
+
+        <!-- Container برای دکمه‌ها (Grid Responsive) --><div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <!-- دکمه تبدیل تاریخ --><button class="app-button"
+                    data-url="./mydateconvertor.html" data-title="تبدیل‌گر تاریخ">
+                <span class="text-3xl mb-2">🗓️</span>
+                <h2 class="text-2xl">تبدیل‌گر تاریخ</h2>
+                <p class="text-gray-400 mt-1">ابزار تبدیل تاریخ شمسی، میلادی و قمری.</p>
+            </button>
+
+            <!-- دکمه دفترچه تلفن --><button class="app-button"
+                    data-url="https://lmo.ir/s/mfaNnd" data-title="دفترچه تلفن">
+                <span class="text-3xl mb-2">📞</span>
+                <h2 class="text-2xl">دفترچه تلفن</h2>
+                <p class="text-gray-400 mt-1">دسترسی سریع به شماره‌های تماس کاری.</p>
+            </button>
+
+            <!-- دکمه ثبت زمان --><button class="app-button"
+                    data-url="./mytimeregister.html" data-title="ثبت‌کننده زمان">
+                <span class="text-3xl mb-2">⏱️</span>
+                <h2 class="text-2xl">ثبت‌کننده زمان</h2>
+                <p class="text-gray-400 mt-1">مدیریت و ثبت کارکرد و زمان‌های انجام پروژه‌ها.</p>
+            </button>
+
+            <!-- دکمه تبدیل اعداد --><button class="app-button"
+                    data-url="./mynumberconvertor.html" data-title="تبدیل‌گر اعداد">
+                <span class="text-3xl mb-2">🔢</span>
+                <h2 class="text-2xl">تبدیل‌گر اعداد</h2>
+                <p class="text-gray-400 mt-1">ابزار تبدیل اعداد و واحدها.</p>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- نمایشگر iFrame - محتوای لود شده --><div id="iframe-view" class="hidden h-screen w-full flex-col">
+        <!-- نوار بالا با دکمه بازگشت --><header class="h-20 p-4 flex items-center justify-between sticky top-0 z-10" dir="rtl">
+            <div class="flex items-center">
+                <button id="back-button" class="flex items-center text-white p-2 rounded-lg">
+                    <!-- آیکون بازگشت --><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-2 transform rotate-180">
+                        <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
+                    </svg>
+                    <span class="text-md font-medium">بازگشت به لانچر</span>
+                </button>
+            </div>
+            <h2 id="iframe-title" class="text-2xl font-bold ml-4"></h2>
+        </header>
+
+        <!-- iFrame برای نمایش محتوای برنامه --><iframe id="content-iframe" title="محتوای برنامه"></iframe>
+    </div>
+
+    <script>
+        const launcherButtons = document.querySelectorAll('.app-button');
+        const launcherView = document.getElementById('launcher-view');
+        const iframeView = document.getElementById('iframe-view');
+        const contentIframe = document.getElementById('content-iframe');
+        const backButton = document.getElementById('back-button');
+        const iframeTitle = document.getElementById('iframe-title');
+
+        // تابع هندل کردن کلیک روی دکمه‌ها
+        launcherButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const url = button.dataset.url;
+                const title = button.dataset.title;
+
+               // اگر لینک اینترنتی بود، در همان تب باز کن
+if (url.startsWith('http')) {
+    window.location.href = url;
+    return;
+}
+
+// در غیر این صورت داخل iframe نمایش بده
+contentIframe.src = url;
+iframeTitle.textContent = title;
+
+launcherView.classList.add('hidden');
+iframeView.classList.remove('hidden');
+iframeView.classList.add('flex');
+
+window.dispatchEvent(new Event('resize'));
+            });
+        });
+
+        // تابع هندل کردن کلیک روی دکمه بازگشت
+        backButton.addEventListener('click', () => {
+            // 1. تغییر نما از iFrame به لانچر
+            iframeView.classList.add('hidden');
+            iframeView.classList.remove('flex');
+            launcherView.classList.remove('hidden');
+
+            // 2. پاک کردن آدرس iFrame (برای جلوگیری از بارگذاری مجدد ناخواسته)
+            contentIframe.src = 'about:blank';
+            iframeTitle.textContent = '';
+        });
+
+        // تنظیم ارتفاع iFrame در زمان تغییر اندازه صفحه
+        window.addEventListener('resize', () => {
+            // ارتفاع iFrame = کل ارتفاع صفحه - ارتفاع Header (80px)
+            contentIframe.style.height = `calc(100vh - 80px)`;
+        });
+
+        // اجرای اولیه تنظیم ارتفاع
+        window.dispatchEvent(new Event('resize'));
+    </script>
+</body>
+</html>

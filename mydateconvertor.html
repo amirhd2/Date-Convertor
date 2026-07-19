@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مبدل تاریخ جامع</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Lucide Icons -->
+  <script type="module" src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
+  <style>
+    /* -------------------- Custom Variables & Dark Mode -------------------- */
+    :root {
+      /* Light Mode Variables */
+      --bg: #f6f7fb;
+      --text: #222;
+      --card-main: #fff;
+      --card-input: #ffffff;
+      --border: #ccc;
+      --primary: #4f46e5; /* Indigo */
+      --primary-hover: #4338ca;
+      --secondary: #9333ea; /* Purple for highlights */
+      --result-bg: #f1f1f1;
+      --shadow-color: rgba(0,0,0,0.15);
+      --input-border: #e0e0e0; 
+      --input-arrow: #6366f1;
+      
+      /* New for Custom Dropdown */
+      --dropdown-bg: #fff;
+      --dropdown-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      --dropdown-border: #d1d5db;
+      --dropdown-hover: #eef2ff;
+    }
+
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a2e;
+        --text: #c9d1d9;
+        --card-main: #202040;
+        --card-input: #292950;
+        --border: #303060;
+        --primary: #6366f1;
+        --primary-hover: #4f46e5;
+        --secondary: #a855f7;
+        --result-bg: #303060;
+        --shadow-color: rgba(0, 0, 0, 0.4);
+        --input-border: #404080;
+        --input-arrow: #a855f7;
+        
+        /* Dark Mode Custom Dropdown */
+        --dropdown-bg: #292950;
+        --dropdown-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        --dropdown-border: #404080;
+        --dropdown-hover: #3d3d6e;
+      }
+    }
+    
+    body {
+        font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+        direction: rtl; 
+        background: var(--bg);
+        color: var(--text);
+        min-height: 10vh; /* Reduced height for display */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        transition: background 0.3s, color 0.3s;
+    }
+    
+    /* -------------------- Custom Dropdown Styling -------------------- */
+    
+    .custom-dropdown-container {
+        position: relative;
+        width: 100%;
+        user-select: none;
+    }
+
+    .custom-dropdown-header {
+        height: 52px; 
+        background: var(--card-input);
+        border: 2px solid var(--input-border); 
+        border-radius: 10px; 
+        padding: 10px 15px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+        font-size: 17px;
+        color: var(--text);
+        transition: all 0.2s;
+    }
+
+    .custom-dropdown-header:hover {
+        border-color: var(--primary);
+    }
+    
+    /* Highlight the border when the menu is open */
+    .custom-dropdown-header.active {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); 
+    }
+    
+    .custom-dropdown-list {
+        position: absolute;
+        z-index: 50; /* Z-index to ensure it sits above other content */
+        top: 100%;
+        right: 0;
+        margin-top: 8px; /* Space between header and list */
+        width: 100%;
+        max-height: 250px; /* Scroll limit */
+        overflow-y: auto;
+        
+        background-color: var(--dropdown-bg);
+        border: 1px solid var(--dropdown-border); 
+        border-radius: 12px;
+        box-shadow: var(--dropdown-shadow); 
+        list-style: none;
+        padding: 4px 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: opacity 0.3s, transform 0.3s, visibility 0s linear 0.3s;
+    }
+
+    .custom-dropdown-list.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition: opacity 0.3s, transform 0.3s, visibility 0s linear 0s;
+    }
+
+    .custom-dropdown-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: background-color 0.1s;
+        text-align: right;
+        font-size: 16px;
+    }
+
+    .custom-dropdown-item:hover {
+        background-color: var(--dropdown-hover);
+        color: var(--primary); 
+    }
+    
+    .custom-dropdown-item.selected {
+        background-color: var(--primary);
+        color: white;
+    }
+    .custom-dropdown-item.selected:hover {
+        background-color: var(--primary-hover);
+    }
+    
+    /* -------------------- Other Styling -------------------- */
+    .dropdown-label {
+        font-size: 15px; 
+        font-weight: 600; 
+        color: var(--primary); 
+        display: block;
+        margin-bottom: 6px;
+        text-align: right;
+        padding-right: 5px;
+    }
+
+    .message-box {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 25px;
+        border-radius: 10px;
+        color: white;
+        font-size: 15px;
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+        z-index: 1000;
+        min-width: 200px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .message-box.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    .message-box.error { background-color: #ef4444; }
+    .message-box.success { background-color: #10b981; }
+    .message-box.warning { background-color: #f59e0b; }
+    
+    /* Utility Class for RTL/LTR for numbers/dates */
+    .ltr {
+        direction: ltr;
+    }
+    
+  </style>
+</head>
+<body>
+  
+  <div class="w-full max-w-2xl bg-[--card-main] p-6 sm:p-10 rounded-3xl shadow-2xl border border-[--border] text-center">
+    
+    <!-- Header -->
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-[--primary] tracking-wide mb-8 flex justify-center items-center">
+        <i data-lucide="calendar-check" class="w-8 h-8 sm:w-10 sm:h-10 ml-2"></i>
+        مبدل تاریخ جامع
+    </h1>
+    
+    <!-- Input Section Card -->
+    <div id="inputSection" class="section mb-8 p-6 rounded-2xl bg-[--card-input] border border-[--input-border] shadow-xl">
+      <h2 class="text-2xl font-bold text-[--text] mb-5 flex justify-center items-center">
+          <i data-lucide="calendar" class="w-6 h-6 ml-2 text-[--primary]"></i>
+          انتخاب تاریخ مبدأ
+      </h2>
+      
+      <div class="flex flex-col justify-center items-stretch gap-4 mb-6">
+          
+          <!-- Calendar Type Dropdown -->
+          <div class="w-full">
+              <label for="calendarType" class="dropdown-label">تقویم مبدأ:</label>
+              <div id="calendarTypeContainer" class="custom-dropdown-container" data-type="calendarType">
+                  <!-- Header and List will be created by JavaScript -->
+              </div>
+              <input type="hidden" id="calendarType" value="j"> <!-- Hidden input to hold the value -->
+          </div>
+          
+          <!-- Date Selects (Year, Month, Day) -->
+          <div id="dateInputs" class="flex flex-wrap justify-between gap-3">
+              
+              <!-- Year Dropdown -->
+              <div class="w-full sm:w-[calc(33.33%-8px)] text-right">
+                <label for="inputYear" class="dropdown-label">سال:</label>
+                <div id="inputYearContainer" class="custom-dropdown-container" data-type="year"></div>
+                <input type="hidden" id="inputYear" value="">
+              </div>
+
+              <!-- Month Dropdown -->
+              <div class="w-full sm:w-[calc(33.33%-8px)] text-right">
+                <label for="inputMonth" class="dropdown-label">ماه:</label>
+                <div id="inputMonthContainer" class="custom-dropdown-container" data-type="month"></div>
+                <input type="hidden" id="inputMonth" value="">
+              </div>
+
+              <!-- Day Dropdown -->
+              <div class="w-full sm:w-[calc(33.33%-8px)] text-right">
+                <label for="inputDay" class="dropdown-label">روز:</label>
+                <div id="inputDayContainer" class="custom-dropdown-container" data-type="day"></div>
+                <input type="hidden" id="inputDay" value="">
+              </div>
+          </div>
+      </div>
+      
+      <!-- Action Button -->
+      <button 
+          onclick="convertAndDisplayAll()"
+          class="bg-[--primary] text-white font-bold py-3 px-8 rounded-xl text-xl hover:bg-[--primary-hover] transition-colors duration-200 shadow-lg w-full mt-4"
+      >
+          <i data-lucide="repeat-2" class="inline-block w-5 h-5 ml-2"></i>
+          تبدیل و نمایش
+      </button>
+    </div>
+
+    <!-- Result Area -->
+    <div class="result-area mt-8">
+      <h3 class="text-2xl font-bold text-[--text] mb-4 flex justify-center items-center">
+          <i data-lucide="list-check" class="w-6 h-6 ml-2 text-[--secondary]"></i>
+          نتایج تبدیل
+      </h3>
+      
+      <!-- Weekday Display -->
+      <div id="resultWeekdayDisplay" class="text-center mb-5 p-4 rounded-xl shadow-lg bg-[--secondary] text-white">
+          <span id="weekdayResultText" class="block"></span>
+      </div> 
+      
+      <!-- Result Sections -->
+      <div id="resultsContainer" class="space-y-4">
+          <!-- Initial result content will be set by JavaScript -->
+          <div class="result p-4 rounded-xl bg-[--result-bg] border border-[--border] text-right shadow-sm" id="resultGregorian"></div>
+          <div class="result p-4 rounded-xl bg-[--result-bg] border border-[--border] text-right shadow-sm" id="resultJalali"></div>
+          <div class="result p-4 rounded-xl bg-[--result-bg] border border-[--border] text-right shadow-sm" id="resultHijri"></div>
+      </div>
+
+    </div>
+  </div>
+    
+  <!-- Message Box -->
+  <div id="messageBox" class="message-box"></div>
+
+  <script>
+    // Initialize Lucide Icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+    
+    // Arrays for month names
+    const calendarTypes = {
+        'j': 'شمسی',
+        'g': 'میلادی',
+        'h': 'قمری'
+    };
+    const persianMonths = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+    const gregorianMonths = ["January", "February", "March", "April", "May", "June",
+                             "July", "August", "September", "October", "November", "December"];
+    const hijriMonths = ["محرم", "صفر", "ربیع‌الاول", "ربیع‌الثانی", "جمادی‌الاول", "جمادی‌الثانی",
+                         "رجب", "شعبان", "رمضان", "شوال", "ذیقعده", "ذیحجه"];
+    const persianWeekdays = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
+
+    // -------------------- Utility Functions --------------------
+
+    function showMessage(message, type = 'success') {
+      const msgBox = document.getElementById('messageBox');
+      msgBox.textContent = message;
+      msgBox.className = `message-box show ${type}`;
+      setTimeout(() => {
+        msgBox.classList.remove('show');
+      }, 3000);
+    }
+    
+    function isGregorianLeapYear(year) {
+      return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    }
+    
+    function isJalaliLeapYear(jy) {
+      const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178];
+      let bl = breaks.length, gy = jy + 621, leapJ = -14, jp = breaks[0], jm, jump, n, i;
+      for (i = 1; i < bl; i++) { jm = breaks[i]; jump = jm - jp; if (jy < jm) break; leapJ += Math.floor(jump / 33) * 8 + Math.floor((jump % 33) / 4); jp = jm; }
+      n = jy - jp;
+      leapJ += Math.floor(n / 33) * 8 + Math.floor((n % 33 + 3) / 4);
+      if ((jump % 33 === 4) && (jump - n === 4)) leapJ++;
+      let leapG = Math.floor(gy / 4) - Math.floor((Math.floor(gy / 100) + 1) * 3 / 4) - 150;
+      return ((leapJ - leapG) % 33) === 1;
+    }
+    
+    function isHijriLeapYear(year) {
+      // Note: This function is not strictly needed for the conversion logic
+      // but kept for compatibility. Hijri conversion relies on Intl for accuracy.
+      const leapYears = [2, 5, 7, 10, 13, 16, 18, 21, 24, 26, 29];
+      return leapYears.includes(year % 30);
+    }
+    
+    /**
+     * Helper to check if the Jalali date is valid (e.g., prevents 30 Esfand in a common year).
+     * @param {number} jy Jalali Year
+     * @param {number} jm Jalali Month
+     * @param {number} jd Jalali Day
+     * @returns {boolean}
+     */
+    function isJalaliValid(jy, jm, jd) {
+        if (jm < 1 || jm > 12 || jd < 1) return false;
+        
+        let daysInMonth;
+        if (jm >= 1 && jm <= 6) daysInMonth = 31;
+        else if (jm >= 7 && jm <= 11) daysInMonth = 30;
+        else if (jm === 12) daysInMonth = isJalaliLeapYear(jy) ? 30 : 29;
+        else return false; 
+        
+        return jd <= daysInMonth;
+    }
+
+
+    // -------------------- Date Conversion Functions --------------------
+    
+    function toJalali(gy, gm, gd) {
+      var g_d_m, jy, jm, jd, gy2, days;
+      g_d_m = [0, 31, isGregorianLeapYear(gy) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      gy2 = (gm > 2) ? (gy + 1) : gy;
+      days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400);
+      for (var i = 0; i < gm; ++i) days += g_d_m[i];
+      days += gd;
+      jy = -1595 + 33 * Math.floor(days / 12053);
+      days %= 12053;
+      jy += 4 * Math.floor(days / 1461);
+      days %= 1461;
+      if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+      var jmList = [0, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+      for (var i = 1; i < 13 && days >= jmList[i]; ++i) days -= jmList[i];
+      jm = i;
+      jd = days + 1;
+      return [jy, jm, jd];
+    }
+    
+    function toGregorian(jy, jm, jd) {
+        // --- ADDED VALIDATION ---
+        if (!isJalaliValid(jy, jm, jd)) {
+            throw new Error("Invalid Jalali Date");
+        }
+        // --- END VALIDATION ---
+        
+        var gy, days, sal_a, i;
+        jy += 1595;
+        days = -355668 + (365 * jy) + Math.floor(jy / 33) * 8 + Math.floor(((jy % 33) + 3) / 4);
+        for (i = 1; i < jm; ++i) days += (i <= 6) ? 31 : (i <= 11 ? 30 : 29);
+        days += jd;
+        gy = 400 * Math.floor(days / 146097);
+        days %= 146097;
+        if (days > 36524) { gy += 100 * Math.floor(--days / 36524); days %= 36524; if (days >= 365) days++; }
+        gy += 4 * Math.floor(days / 1461);
+        days %= 1461;
+        if (days > 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+        var gd = days + 1;
+        var sal_a = [0, 31, isGregorianLeapYear(gy) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var gm;
+        for (gm = 1; gm <= 12 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
+        return [gy, gm, gd];
+    }
+    
+    function toHijri(gy, gm, gd) {
+        try {
+            const gregorianDate = new Date(gy, gm - 1, gd);
+            // Check for invalid date (e.g., February 30th)
+            if (gregorianDate.getFullYear() !== gy || gregorianDate.getMonth() !== gm - 1 || gregorianDate.getDate() !== gd) {
+                 throw new Error("Invalid Gregorian Date before Hijri conversion.");
+            }
+            const options = { year: 'numeric', month: 'numeric', day: 'numeric', calendar: 'islamic-umalqura' };
+            const hijriParts = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', options).formatToParts(gregorianDate);
+            let hijriYear, hijriMonth, hijriDay;
+            for (const part of hijriParts) {
+                if (part.type === 'year') hijriYear = parseInt(part.value);
+                if (part.type === 'month') hijriMonth = parseInt(part.value);
+                if (part.type === 'day') hijriDay = parseInt(part.value);
+            }
+            if (hijriYear && hijriMonth && hijriDay) return [hijriYear, hijriMonth, hijriDay];
+            throw new Error("Could not parse Hijri date parts.");
+        } catch (e) {
+            console.error("Hijri conversion failed using Intl:", e);
+            // Fallback for failed Intl conversion (less accurate and often unstable in small environments)
+            throw e; 
+        }
+    }
+    
+    function toGregorianFromHijri(hy, hm, hd) {
+        // Simplified approach using Intl.DateTimeFormat is generally safer
+        try {
+            const dateString = `${hy}/${hm}/${hd}`;
+            const gregorianDate = new Date(dateString); // JS often attempts to parse dates like this
+            if (isNaN(gregorianDate.getTime())) {
+                throw new Error("JS built-in date parsing failed for Hijri.");
+            }
+            
+            // To ensure the conversion is accurate, we can use a library or a robust algorithm.
+            // Since we are limited to pure JS, let's use the standard algorithm provided previously
+            
+            let jd = Math.floor((11 * hy + 3) / 30) + 354 * hy + 30 * hm - Math.floor((hm - 1) / 2) + hd + 1948440 - 385;
+            let gy, gm, gd;
+            if (jd > 2299160) {
+                let l = jd + 68569;
+                let n = Math.floor((4 * l) / 146097);
+                l = l - Math.floor((146097 * n + 3) / 4);
+                let i = Math.floor((4000 * (l + 1)) / 1461001);
+                l = l - Math.floor((1461 * i) / 4) + 31;
+                let j = Math.floor((80 * l) / 2447);
+                gd = l - Math.floor((2447 * j) / 80);
+                l = Math.floor(j / 11);
+                gm = j + 2 - 12 * l;
+                gy = 100 * (n - 49) + i + l;
+            } else {
+                let j = jd + 1402;
+                let k = Math.floor((j - 1) / 1461);
+                let l = j - 1461 * k;
+                let n = Math.floor((l - 1) / 365) - Math.floor(l / 1461);
+                let i = l - 365 * n + 30;
+                let jm_val = Math.floor((80 * i) / 2447);
+                gd = i - Math.floor((2447 * jm_val) / 80);
+                i = Math.floor(jm_val / 11);
+                gm = jm_val + 2 - 12 * i;
+                gy = 4 * k + n + i - 4716;
+            }
+            return [gy, gm, gd];
+
+        } catch (e) {
+            console.error("Gregorian from Hijri conversion failed:", e);
+            throw new Error("Invalid Hijri Date or conversion failed.");
+        }
+    }
+    
+    function getPersianWeekday(gy, gm, gd) {
+      // Use the standard Date object for getting the weekday
+      const date = new Date(gy, gm - 1, gd);
+      if (isNaN(date.getTime())) return "تاریخ نامعتبر";
+      const dayIndex = date.getDay(); // 0=Sun, 6=Sat
+      const persianIndex = (dayIndex + 1) % 7; // Sunday is 1, so shift to make Saturday 0 (Persian start)
+      return persianWeekdays[persianIndex];
+    }
+
+    // -------------------- Custom Dropdown Logic (New Implementation) --------------------
+    
+    // Tracks the currently open dropdown element
+    let activeDropdown = null;
+
+    /**
+     * Initializes a custom dropdown interface.
+     * @param {string} containerId - ID of the container div.
+     * @param {Array<Object>} items - Array of {value, label} objects.
+     * @param {string | number} initialValue - The initial selected value.
+     * @param {function} onChangeCallback - Function to call on selection change.
+     */
+    function initCustomDropdown(containerId, items, initialValue, onChangeCallback) {
+        const container = document.getElementById(containerId);
+        const hiddenInput = document.getElementById(containerId.replace('Container', ''));
+        const dataType = container.getAttribute('data-type');
+
+        if (!container || !hiddenInput) return;
+
+        container.innerHTML = `
+            <div class="custom-dropdown-header" tabindex="0">
+                <span id="${containerId}Label"></span>
+                <i data-lucide="chevron-down" class="w-5 h-5 text-[--input-arrow]"></i>
+            </div>
+            <ul class="custom-dropdown-list" id="${containerId}List">
+                ${items.map(item => `
+                    <li class="custom-dropdown-item" 
+                        data-value="${item.value}" 
+                        data-label="${item.label}">
+                        ${item.label}
+                    </li>
+                `).join('')}
+            </ul>
+        `;
+        
+        const header = container.querySelector('.custom-dropdown-header');
+        const list = container.querySelector('.custom-dropdown-list');
+        const label = document.getElementById(`${containerId}Label`);
+        
+        // Function to close the list
+        const closeDropdown = () => {
+            list.classList.remove('open');
+            header.classList.remove('active');
+            activeDropdown = null;
+        };
+        
+        // Function to open the list
+        const openDropdown = (e) => {
+            e.stopPropagation(); // Prevent document click from closing it immediately
+            // Close any currently open dropdown
+            if (activeDropdown && activeDropdown !== container) {
+                const prevList = activeDropdown.querySelector('.custom-dropdown-list');
+                const prevHeader = activeDropdown.querySelector('.custom-dropdown-header');
+                if (prevList) prevList.classList.remove('open');
+                if (prevHeader) prevHeader.classList.remove('active');
+            }
+            
+            list.classList.toggle('open');
+            header.classList.toggle('active');
+            activeDropdown = list.classList.contains('open') ? container : null;
+        };
+        
+        // Click listener to toggle the list
+        header.addEventListener('click', openDropdown);
+        header.addEventListener('keydown', (e) => {
+             if (e.key === 'Enter' || e.key === ' ') openDropdown(e);
+             if (e.key === 'Escape') closeDropdown();
+        });
+
+        // Click listener for list items
+        list.querySelectorAll('.custom-dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const value = item.getAttribute('data-value');
+                const newLabel = item.getAttribute('data-label');
+                
+                // Update selected styles
+                list.querySelectorAll('.custom-dropdown-item').forEach(li => li.classList.remove('selected'));
+                item.classList.add('selected');
+
+                // Update header and hidden input
+                label.textContent = newLabel;
+                hiddenInput.value = value;
+                
+                closeDropdown();
+                
+                // Call the change handler
+                onChangeCallback(value);
+            });
+        });
+        
+        // Set initial value and label
+        // We use loose comparison (==) for initialValue to handle number/string mix
+        const initialItem = items.find(i => i.value == initialValue);
+        const initialLabel = initialItem ? initialItem.label : items[0]?.label;
+        const finalInitialValue = initialItem ? initialItem.value : (items.length > 0 ? items[0].value : '');
+
+        if (initialLabel) label.textContent = initialLabel;
+        hiddenInput.value = finalInitialValue;
+        
+        // Select the initial item visually
+        const selectedItem = list.querySelector(`.custom-dropdown-item[data-value="${finalInitialValue}"]`);
+        if (selectedItem) selectedItem.classList.add('selected');
+    }
+
+    // Global listener to close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (activeDropdown && !activeDropdown.contains(e.target)) {
+            const list = activeDropdown.querySelector('.custom-dropdown-list');
+            const header = activeDropdown.querySelector('.custom-dropdown-header');
+            if (list) list.classList.remove('open');
+            if (header) header.classList.remove('active');
+            activeDropdown = null;
+        }
+    });
+
+    // -------------------- Initialization & Update Logic --------------------
+
+    /**
+     * Calculates the items array for the day dropdown based on current year/month.
+     */
+    function getDayItems(calendarType, year, month) {
+      let daysInMonth = 31;
+      // Check for invalid input month/year
+      if (isNaN(year) || isNaN(month) || month < 1 || month > 12) {
+          return Array.from({ length: 31 }, (_, i) => ({ value: i + 1, label: (i + 1).toString() }));
+      }
+      
+      if (calendarType === "g") {
+        const gregorianDays = [31, isGregorianLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        daysInMonth = gregorianDays[month - 1];
+      } else if (calendarType === "j") {
+        if (month >= 1 && month <= 6) daysInMonth = 31;
+        else if (month >= 7 && month <= 11) daysInMonth = 30;
+        else if (month === 12) daysInMonth = isJalaliLeapYear(year) ? 30 : 29;
+      } else if (calendarType === "h") {
+        // Simplified estimate for dropdown display
+        daysInMonth = (month % 2 === 1) ? 30 : 29;
+      }
+      return Array.from({ length: daysInMonth }, (_, i) => ({ value: i + 1, label: (i + 1).toString() }));
+    }
+
+    /**
+     * Re-initializes the Day dropdown when Year or Month changes.
+     */
+    function updateDayDropdown() {
+        const calendarType = document.getElementById('calendarType').value;
+        const year = parseInt(document.getElementById('inputYear').value);
+        const month = parseInt(document.getElementById('inputMonth').value);
+        const daySelect = document.getElementById('inputDay');
+        const dayContainerId = 'inputDayContainer';
+
+        // Check for valid numbers before proceeding
+        if (isNaN(year) || isNaN(month)) {
+            // If year/month is incomplete, just run conversion to display an error or clear results
+            convertAndDisplayAll(); 
+            return;
+        }
+
+        const dayItems = getDayItems(calendarType, year, month);
+        let currentDayValue = parseInt(daySelect.value);
+        
+        // Ensure the new day value is valid for the newly selected month/year
+        // If the current day is 31 and the new month only has 30 days, default to 30.
+        let newDayValue = dayItems.some(i => i.value === currentDayValue) ? currentDayValue : dayItems[dayItems.length - 1].value;
+        
+        // Re-init the day dropdown
+        initCustomDropdown(dayContainerId, dayItems, newDayValue, convertAndDisplayAll);
+        
+        // Conversion will be called via the initCustomDropdown callback (convertAndDisplayAll)
+    }
+
+
+    /**
+     * Initializes all date pickers based on the selected calendar type.
+     */
+    function populateInputDatePickers(calendarType) {
+      let startYear, endYear, monthLabels, yearItems = [], monthItems = [];
+      let today = new Date(); 
+      let initialYear, initialMonth, initialDay;
+      const currentYear = today.getFullYear();
+
+      if (calendarType === 'g') {
+        startYear = 1900; endYear = currentYear + 10;
+        monthLabels = gregorianMonths;
+        initialYear = currentYear; initialMonth = today.getMonth() + 1; initialDay = today.getDate();
+      } else if (calendarType === 'j') {
+        startYear = 1300; endYear = 1500;
+        monthLabels = persianMonths;
+        try {
+            const jalaliToday = toJalali(currentYear, today.getMonth() + 1, today.getDate());
+            initialYear = jalaliToday[0]; initialMonth = jalaliToday[1]; initialDay = jalaliToday[2];
+        } catch (e) { 
+            // Fallback for extreme cases
+            initialYear = 1403; initialMonth = 1; initialDay = 1; 
+        }
+      } else if (calendarType === 'h') {
+        startYear = 1400; endYear = 1500;
+        monthLabels = hijriMonths;
+        try {
+            const hijriToday = toHijri(currentYear, today.getMonth() + 1, today.getDate());
+            initialYear = hijriToday[0]; initialMonth = hijriToday[1]; initialDay = hijriToday[2];
+        } catch (e) { 
+            initialYear = 1446; initialMonth = 1; initialDay = 1; 
+        }
+      }
+      
+      // Populate Year Items (Reverse order: Current year on top)
+      for (let i = endYear; i >= startYear; i--) {
+        yearItems.push({ value: i, label: i.toString() });
+      }
+      // Populate Month Items
+      monthItems = monthLabels.map((label, index) => ({ value: index + 1, label: (index + 1).toString() + ' - ' + label }));
+      
+      // Init Dropdowns
+      // NOTE: We MUST pass convertAndDisplayAll to the LAST dropdown's callback
+      // For now, we pass updateDayDropdown to Y/M, and updateDayDropdown handles D initialization.
+      initCustomDropdown('inputYearContainer', yearItems, initialYear, updateDayDropdown);
+      initCustomDropdown('inputMonthContainer', monthItems, initialMonth, updateDayDropdown);
+      
+      // Init Day Dropdown (which also calls convertAndDisplayAll)
+      const dayItems = getDayItems(calendarType, initialYear, initialMonth);
+      initCustomDropdown('inputDayContainer', dayItems, initialDay, convertAndDisplayAll);
+    }
+    
+    /**
+     * Handler for Calendar Type change.
+     */
+    function handleCalendarTypeChange(value) {
+        populateInputDatePickers(value);
+    }
+    
+    // Helper to clear and show an error in the results area
+    function displayError(message) {
+        document.getElementById("weekdayResultText").innerHTML = `<span class="text-2xl font-extrabold text-white">خطای تبدیل</span>`;
+        document.getElementById("resultsContainer").innerHTML = `<div class="p-4 text-center text-sm text-[#ef4444] bg-[--card-main] rounded-xl shadow-sm">${message}</div>`;
+        showMessage(message, 'error');
+    }
+
+    // -------------------- Main Conversion Function --------------------
+
+    function convertAndDisplayAll() {
+      // Clear previous messages (if any)
+      const resultContainer = document.getElementById("resultsContainer");
+      resultContainer.innerHTML = `
+          <div class="result p-4 rounded-xl bg-[--result-bg] border border-[--border] text-right shadow-sm" id="resultGregorian"></div>
+          <div class="result p-4 rounded-xl bg-[--result-bg] border border-[--border] text-right shadow-sm" id="resultJalali"></div>
+          <div class="result p-4 rounded-xl bg-[--result-bg] border border-[--border] text-right shadow-sm" id="resultHijri"></div>
+      `;
+
+      const selectedCalendarType = document.getElementById('calendarType').value;
+      const inputYear = parseInt(document.getElementById("inputYear").value);
+      const inputMonth = parseInt(document.getElementById("inputMonth").value);
+      const inputDay = parseInt(document.getElementById("inputDay").value);
+
+      if (isNaN(inputYear) || isNaN(inputMonth) || isNaN(inputDay)) {
+          displayError("لطفاً یک تاریخ کامل را انتخاب کنید.");
+          return;
+      }
+      
+      let gregorianDateArray;
+
+      // 1. Convert selected date to Gregorian
+      try {
+          if (selectedCalendarType === 'g') {
+              // Basic check for Gregorian validity (prevents issues like Feb 30)
+              const testDate = new Date(inputYear, inputMonth - 1, inputDay);
+              if (testDate.getFullYear() !== inputYear || testDate.getMonth() !== inputMonth - 1 || testDate.getDate() !== inputDay) {
+                  throw new Error("Invalid Gregorian Date selected.");
+              }
+              gregorianDateArray = [inputYear, inputMonth, inputDay];
+          } else if (selectedCalendarType === 'j') {
+              gregorianDateArray = toGregorian(inputYear, inputMonth, inputDay);
+          } else if (selectedCalendarType === 'h') {
+              gregorianDateArray = toGregorianFromHijri(inputYear, inputMonth, inputDay);
+          }
+      } catch (e) {
+          console.error("Conversion to Gregorian failed:", e);
+          displayError("تاریخ انتخاب شده، یک تاریخ نامعتبر است. لطفاً ورودی خود را بررسی کنید.");
+          return;
+      }
+
+      const [gy, gm, gd] = gregorianDateArray;
+      
+      // 2. Further sanity check on Gregorian date (prevents issues with invalid J/H input)
+      if (gy < 1000 || gy > 3000 || gm < 1 || gm > 12 || gd < 1 || gd > 31) {
+          displayError("تاریخ تبدیل‌شده خارج از محدوده مجاز یا نامعتبر است.");
+          return;
+      }
+
+      // 3. Get Weekday
+      const weekdayFa = getPersianWeekday(gy, gm, gd);
+
+      // 4. Display Weekday
+      document.getElementById("weekdayResultText").innerHTML = `
+          <div class="text-2xl font-extrabold mb-1">${weekdayFa}</div>
+      `;
+
+      // 5. Convert Gregorian to Jalali and Hijri
+      let jalaliDateArray, hijriDateArray;
+      
+      try {
+        jalaliDateArray = toJalali(gy, gm, gd);
+      } catch (e) {
+        console.error("Jalali conversion failed:", e);
+        jalaliDateArray = [0, 0, 0];
+      }
+      
+      try {
+        hijriDateArray = toHijri(gy, gm, gd);
+      } catch (e) {
+        console.error("Hijri conversion failed:", e);
+        hijriDateArray = [0, 0, 0];
+      }
+      
+      const [jy, jm, jd] = jalaliDateArray;
+      const [hy, hm, hd] = hijriDateArray;
+
+      // 6. Display Results
+      
+      // Gregorian Result
+      const gregorianMonthName = gregorianMonths[gm - 1] || '---';
+      document.getElementById("resultGregorian").innerHTML = `
+          <div class="flex flex-col sm:flex-row justify-between items-center">
+              <span class="font-bold text-lg text-[--primary]">میلادی:</span>
+              <span class="text-xl font-extrabold ltr">${gy}/${gm}/${gd}</span>
+          </div>
+          <div class="mt-1 text-sm text-[--text] opacity-80">${gregorianMonthName} ${gd}, ${gy} میلادی</div>
+      `;
+
+      // Jalali Result
+      const jalaliMonthName = persianMonths[jm - 1] || '---';
+      document.getElementById("resultJalali").innerHTML = `
+          <div class="flex flex-col sm:flex-row justify-between items-center">
+              <span class="font-bold text-lg text-[--primary]">شمسی:</span>
+              <span class="text-xl font-extrabold">${jy > 0 ? `${jy}/${jm}/${jd}` : '---'}</span>
+          </div>
+          <div class="mt-1 text-sm text-[--text] opacity-80">${jd > 0 ? `${jd} ${jalaliMonthName} ${jy}` : 'تبدیل امکان‌پذیر نبود'}</div>
+      `;
+
+      // Hijri Result
+      const hijriMonthName = hijriMonths[hm - 1] || '---';
+      document.getElementById("resultHijri").innerHTML = `
+          <div class="flex flex-col sm:flex-row justify-between items-center">
+              <span class="font-bold text-lg text-[--primary]">قمری:</span>
+              <span class="text-xl font-extrabold">${hy > 0 ? `${hy}/${hm}/${hd}` : '---'}</span>
+          </div>
+          <div class="mt-1 text-sm text-[--text] opacity-80">${hd > 0 ? `${hd} ${hijriMonthName} ${hy} هجری قمری` : 'تبدیل امکان‌پذیر نبود'}</div>
+      `;
+    }
+
+    // Initial setup function
+    function setup() {
+      // Initialize Lucide Icons again in case they weren't ready
+      if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+      }
+
+      // 1. Initialize Calendar Type Dropdown
+      const calendarTypeItems = Object.keys(calendarTypes).map(key => ({ value: key, label: calendarTypes[key] }));
+      initCustomDropdown('calendarTypeContainer', calendarTypeItems, 'j', handleCalendarTypeChange);
+      
+      // 2. Initialize other inputs based on default calendar
+      populateInputDatePickers('j');
+
+      // 3. **************** FIX: Run conversion immediately after setup is complete ****************
+      // Since populateInputDatePickers calls initCustomDropdown for Day, and Day's callback is 
+      // convertAndDisplayAll, it should run once automatically. 
+      // If for any reason the asynchronous setup fails to call it, we ensure it runs here.
+      // We wrap it in a setTimeout just to ensure all DOM updates from initCustomDropdown have finished.
+      setTimeout(convertAndDisplayAll, 0); 
+    }
+
+    // Call setup function when the script loads
+    document.addEventListener('DOMContentLoaded', setup);
+  </script>
+</body>
+</html>
