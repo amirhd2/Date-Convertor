@@ -1,820 +1,815 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>LMO Launcher v2</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-html,body{
-
-width:100%;
-height:100%;
-
-font-family:'Vazirmatn',sans-serif;
-
-overflow:hidden;
-
-background:
-radial-gradient(circle at top right,#5145CD 0%,transparent 30%),
-radial-gradient(circle at bottom left,#06B6D4 0%,transparent 28%),
-linear-gradient(135deg,#0f172a,#1e293b,#111827);
-
-color:white;
-
-}
-
-body{
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-}
-
-#launcher-view{
-
-width:100%;
-height:100vh;
-
-padding:30px;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-}
-
-.title{
-
-font-size:44px;
-
-font-weight:800;
-
-background:linear-gradient(90deg,#ffffff,#7dd3fc);
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
-
-margin-bottom:8px;
-
-}
-
-.subtitle{
-
-color:#cbd5e1;
-
-font-size:18px;
-
-margin-bottom:30px;
-
-}
-
-.cards{
-
-width:100%;
-
-max-width:1350px;
-
-display:grid;
-
-grid-template-columns:repeat(2,1fr);
-
-gap:22px;
-
-}
-
-.app-button{
-
-position:relative;
-
-overflow:hidden;
-
-height:220px;
-
-border-radius:28px;
-
-background:rgba(255,255,255,.07);
-
-border:1px solid rgba(255,255,255,.08);
-
-backdrop-filter:blur(18px);
-
-cursor:pointer;
-
-transition:.35s;
-
-box-shadow:
-0 15px 40px rgba(0,0,0,.35);
-
-}
-
-.app-button:hover{
-
-transform:translateY(-8px);
-
-box-shadow:
-0 25px 55px rgba(0,0,0,.45);
-
-}
-
-.app-button::before{
-
-content:"";
-
-position:absolute;
-
-width:260px;
-
-height:260px;
-
-border-radius:50%;
-
-right:-90px;
-
-top:-90px;
-
-opacity:.12;
-
-}
-
-.date::before{
-
-background:#3B82F6;
-
-}
-
-.phone::before{
-
-background:#22C55E;
-
-}
-
-.time::before{
-
-background:#F59E0B;
-
-}
-
-.number::before{
-
-background:#A855F7;
-
-}
-
-.card-content{
-
-position:relative;
-
-z-index:2;
-
-height:100%;
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-padding:30px;
-
-}
-
-.info h2{
-
-font-size:30px;
-
-font-weight:800;
-
-margin-bottom:10px;
-
-}
-
-.info p{
-
-line-height:2;
-
-font-size:15px;
-
-color:#dbe4ee;
-
-max-width:290px;
-
-}
-
-.icon{
-
-width:120px;
-
-height:120px;
-
-transition:.35s;
-
-}
-
-.app-button:hover .icon{
-
-transform:scale(1.08) rotate(6deg);
-
-}
-
-#iframe-view{
-
-display:none;
-
-width:100%;
-
-height:100vh;
-
-flex-direction:column;
-
-background:#0f172a;
-
-}
-
-header{
-
-height:72px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-padding:0 24px;
-
-background:rgba(15,23,42,.9);
-
-backdrop-filter:blur(18px);
-
-border-bottom:1px solid rgba(255,255,255,.08);
-
-}
-
-#back-button{
-
-padding:10px 18px;
-
-border:none;
-
-border-radius:14px;
-
-cursor:pointer;
-
-background:#2563eb;
-
-color:white;
-
-font-size:15px;
-
-transition:.3s;
-
-}
-
-#back-button:hover{
-
-background:#1d4ed8;
-
-}
-
-#iframe-title{
-
-font-size:22px;
-
-font-weight:700;
-
-}
-
-#content-iframe{
-
-width:100%;
-
-height:calc(100vh - 72px);
-
-border:none;
-
-background:white;
-
-}
-
-@media(max-width:900px){
-
-html,body{
-
-overflow:auto;
-
-}
-
-#launcher-view{
-
-height:auto;
-
-}
-
-.cards{
-
-grid-template-columns:1fr;
-
-}
-
-.app-button{
-
-height:180px;
-
-}
-
-.title{
-
-font-size:34px;
-
-}
-
-.icon{
-
-width:90px;
-
-height:90px;
-
-}
-
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="تبدیل تاریخ">
+  <title>تبدیل تاریخ</title>
+
+  <!-- App Icons for iOS & Web -->
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" type="image/png" href="icon.png">
+
+  <!-- PWA Dynamic Inline Manifest -->
+  <link id="manifestLink" rel="manifest">
+  
+  <style>
+    /* ---------------- Theme Variables ---------------- */
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --card-inner: #282828;
+      --text-main: #ffffff;
+      --text-muted: #aaaaaa;
+      --text-dim: #666666;
+      --accent-color: #e5a93c; /* Orange / Amber highlight */
+      --tab-bg: #222222;
+      --tab-active-bg: #383838;
+      --border-color: #2c2c2c;
+      --item-active-bg: rgba(255, 255, 255, 0.08);
+      --close-btn-bg: #2a2a2a;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f2f2f7;
+      --card-bg: #ffffff;
+      --card-inner: #f8f9fa;
+      --text-main: #000000;
+      --text-muted: #555555;
+      --text-dim: #999999;
+      --accent-color: #d97706;
+      --tab-bg: #e5e5ea;
+      --tab-active-bg: #ffffff;
+      --border-color: #e5e5ea;
+      --item-active-bg: rgba(0, 0, 0, 0.05);
+      --close-btn-bg: #e5e5ea;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+      direction: rtl;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* App Container */
+    .app-container {
+      width: 100%;
+      max-width: 420px;
+      background-color: var(--card-bg);
+      border-radius: 26px;
+      padding: 18px 16px 20px 16px;
+      box-shadow: 0 18px 36px rgba(0,0,0,0.4);
+      position: relative;
+      transition: background-color 0.3s;
+    }
+
+    /* Top Header Section */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .main-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      text-align: right;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Today Button */
+    .today-btn {
+      padding: 6px 14px;
+      border-radius: 18px;
+      border: 1px solid var(--border-color);
+      background-color: var(--close-btn-bg);
+      color: var(--accent-color);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .today-btn:active {
+      transform: scale(0.93);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--close-btn-bg);
+      border: none;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .theme-toggle-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Centered Navigation Tabs Bar */
+    .tabs-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .tabs-nav {
+      display: inline-flex;
+      background-color: var(--tab-bg);
+      padding: 4px;
+      border-radius: 20px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      padding: 6px 18px;
+      border-radius: 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn.active {
+      background-color: var(--tab-active-bg);
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    /* Original Size iOS Wheel Picker Container */
+    .picker-wrapper {
+      position: relative;
+      height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      margin-bottom: 12px;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%);
+    }
+
+    .picker-selection-highlight {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      right: 10px;
+      transform: translateY(-50%);
+      height: 40px;
+      background-color: var(--item-active-bg);
+      border-radius: 12px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .wheels-container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    .wheel-column {
+      flex: 1;
+      height: 100%;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-snap-type: y mandatory;
+      padding: 70px 0;
+    }
+
+    .wheel-column::-webkit-scrollbar {
+      display: none;
+    }
+
+    .wheel-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-dim);
+      scroll-snap-align: center;
+      transition: color 0.15s, transform 0.15s;
+    }
+
+    .wheel-item.selected {
+      color: var(--text-main);
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    /* Selected Full Date Display above Grid (Orange, Centered, Stretched) */
+    .selected-month-header {
+      color: var(--accent-color);
+      font-size: 17px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 2px;
+      transform: scaleX(1.12);
+      transform-origin: center;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    /* Days Grid Selector */
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .day-cell {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      background-color: var(--card-inner);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day-cell:active {
+      transform: scale(0.92);
+    }
+
+    .day-cell.selected {
+      background-color: var(--accent-color);
+      color: #000000;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(229, 169, 60, 0.3);
+    }
+
+    /* Output Results Section */
+    .results-card {
+      border-top: 1px solid var(--border-color);
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Weekday Stretched & Centered Style */
+    .result-weekday-top {
+      color: var(--accent-color);
+      font-size: 16px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 3px;
+      transform: scaleX(1.15);
+      transform-origin: center;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      padding: 1px 0;
+    }
+
+    /* Orange Labels for Calendar Types */
+    .result-label {
+      color: var(--accent-color);
+      font-weight: 700;
+    }
+
+    .result-value {
+      color: var(--text-main);
+      font-weight: 700;
+      direction: rtl;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background-color: var(--border-color);
+    }
+  </style>
 </head>
-
 <body>
 
-<div id="launcher-view">
+  <div class="app-container">
+    
+    <!-- Top Header Bar: Title Right, Buttons Left -->
+    <div class="top-header">
+      <h1 class="main-title">تبدیل تاریخ</h1>
 
-    <h1 class="title">LMO Launcher</h1>
+      <div class="header-actions">
+        <!-- Today Button -->
+        <button class="today-btn" id="todayBtn">امروز</button>
 
-    <div class="subtitle">
-
-        انتخاب ابزار مورد نیاز
-
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="تغییر تم">
+          <svg id="sunIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          </svg>
+          <svg id="moonIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
     </div>
 
-    <div class="cards">
-
-        <!-- ===================== -->
-
-        <!-- تبدیل تاریخ -->
-
-        <!-- ===================== -->
-
-        <button
-            class="app-button date"
-            data-url="./mydateconvertor.html"
-            data-title="تبدیل‌گر تاریخ">
-
-            <div class="card-content">
-
-                <div class="info">
-
-                    <h2>تبدیل تاریخ</h2>
-
-                    <p>
-
-                        تبدیل تاریخ شمسی،
-                        میلادی و قمری
-
-                    </p>
-
-                </div>
-
-                <svg
-                    class="icon"
-                    viewBox="0 0 128 128">
-
-                    <rect
-                        x="18"
-                        y="24"
-                        width="92"
-                        height="84"
-                        rx="18"
-                        fill="#3B82F6"/>
-
-                    <rect
-                        x="18"
-                        y="24"
-                        width="92"
-                        height="22"
-                        fill="#1D4ED8"/>
-
-                    <circle cx="38" cy="18" r="6" fill="white"/>
-
-                    <circle cx="90" cy="18" r="6" fill="white"/>
-
-                    <rect x="34" y="58" width="16" height="16" fill="white"/>
-
-                    <rect x="58" y="58" width="16" height="16" fill="white"/>
-
-                    <rect x="82" y="58" width="16" height="16" fill="white"/>
-
-                    <rect x="34" y="80" width="16" height="16" fill="white"/>
-
-                    <rect x="58" y="80" width="16" height="16" fill="white"/>
-
-                </svg>
-
-            </div>
-
-        </button>
-
-        <!-- ===================== -->
-
-        <!-- دفترچه تلفن -->
-
-        <!-- ===================== -->
-
-        <button
-            class="app-button phone"
-            data-url="https://lmo.ir/s/mfaNnd"
-            data-title="دفترچه تلفن">
-
-            <div class="card-content">
-
-                <div class="info">
-
-                    <h2>دفترچه تلفن</h2>
-
-                    <p>
-
-                        دسترسی سریع
-                        به شماره‌های سازمان
-
-                    </p>
-
-                </div>
-
-                <svg
-                    class="icon"
-                    viewBox="0 0 128 128">
-
-                    <rect
-                        x="32"
-                        y="18"
-                        width="64"
-                        height="92"
-                        rx="14"
-                        fill="#22C55E"/>
-
-                    <circle
-                        cx="64"
-                        cy="38"
-                        r="8"
-                        fill="white"/>
-
-                    <rect
-                        x="46"
-                        y="56"
-                        width="36"
-                        height="8"
-                        rx="4"
-                        fill="white"/>
-
-                    <rect
-                        x="46"
-                        y="74"
-                        width="36"
-                        height="8"
-                        rx="4"
-                        fill="white"/>
-
-                    <rect
-                        x="46"
-                        y="92"
-                        width="26"
-                        height="8"
-                        rx="4"
-                        fill="white"/>
-
-                </svg>
-
-            </div>
-
-        </button>
-
-        <!-- ===================== -->
-
-        <!-- ثبت زمان -->
-
-        <!-- ===================== -->
-
-        <button
-            class="app-button time"
-            data-url="./mytimeregister.html"
-            data-title="ثبت زمان">
-
-            <div class="card-content">
-
-                <div class="info">
-
-                    <h2>ثبت زمان</h2>
-
-                    <p>
-
-                        مدیریت ساعت کاری
-                        و پروژه‌ها
-
-                    </p>
-
-                </div>
-
-                <svg
-                    class="icon"
-                    viewBox="0 0 128 128">
-
-                    <circle
-                        cx="64"
-                        cy="64"
-                        r="42"
-                        fill="#F59E0B"/>
-
-                    <circle
-                        cx="64"
-                        cy="64"
-                        r="30"
-                        fill="white"/>
-
-                    <rect
-                        x="62"
-                        y="42"
-                        width="4"
-                        height="24"
-                        fill="#F59E0B"/>
-
-                    <rect
-                        x="64"
-                        y="62"
-                        width="18"
-                        height="4"
-                        fill="#F59E0B"/>
-
-                </svg>
-
-            </div>
-
-        </button>
-
-        <!-- ===================== -->
-
-        <!-- تبدیل اعداد -->
-
-        <!-- ===================== -->
-
-        <button
-            class="app-button number"
-            data-url="./mynumberconvertor.html"
-            data-title="تبدیل اعداد">
-
-            <div class="card-content">
-
-                <div class="info">
-
-                    <h2>تبدیل اعداد</h2>
-
-                    <p>
-
-                        تبدیل انواع اعداد
-                        و واحدها
-
-                    </p>
-
-                </div>
-
-                <svg
-                    class="icon"
-                    viewBox="0 0 128 128">
-
-                    <rect
-                        x="34"
-                        y="18"
-                        width="60"
-                        height="92"
-                        rx="12"
-                        fill="#A855F7"/>
-
-                    <rect
-                        x="44"
-                        y="30"
-                        width="40"
-                        height="14"
-                        fill="white"/>
-
-                    <circle cx="50" cy="62" r="5" fill="white"/>
-                    <circle cx="64" cy="62" r="5" fill="white"/>
-                    <circle cx="78" cy="62" r="5" fill="white"/>
-
-                    <circle cx="50" cy="80" r="5" fill="white"/>
-                    <circle cx="64" cy="80" r="5" fill="white"/>
-                    <circle cx="78" cy="80" r="5" fill="white"/>
-
-                </svg>
-
-            </div>
-
-        </button>
-
+    <!-- Centered Navigation Tabs Bar (Shamsi -> Gregorian -> Hijri) -->
+    <div class="tabs-wrapper">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-type="j">شمسی</button>
+        <button class="tab-btn" data-type="g">میلادی</button>
+        <button class="tab-btn" data-type="h">قمری</button>
+      </div>
     </div>
 
-</div>
-<div id="iframe-view">
+    <!-- 3D Wheel Picker (Year & Month) -->
+    <div class="picker-wrapper">
+      <div class="picker-selection-highlight"></div>
+      <div class="wheels-container">
+        <!-- Month Column (Right) -->
+        <div class="wheel-column" id="monthWheel"></div>
+        <!-- Year Column (Left) -->
+        <div class="wheel-column" id="yearWheel"></div>
+      </div>
+    </div>
+
+    <!-- Selected Date Display above Grid -->
+    <div class="selected-month-header" id="selectedMonthHeader">--</div>
+
+    <!-- Day Grid Selector -->
+    <div class="days-grid" id="daysGrid"></div>
+
+    <!-- Output Conversion Results Card -->
+    <div class="results-card">
+      <!-- Weekday Centered, Stretched & Orange -->
+      <div class="result-weekday-top" id="resultWeekday">--</div>
+
+      <div class="result-row">
+        <span class="result-value" id="resultJalali">--</span>
+        <span class="result-label">هجری شمسی</span>
+      </div>
+      <div class="divider"></div>
+
+      <div class="result-row">
+        <span class="result-value" id="resultHijri">--</span>
+        <span class="result-label">هجری قمری</span>
+      </div>
+      <div class="divider"></div>
+
+      <div class="result-row">
+        <span class="result-value" id="resultGregorian">--</span>
+        <span class="result-label">میلادی</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ---------------- PWA & Service Worker Inline Setup ---------------- */
+    (function setupPWA() {
+      // 1. Register Inline Web App Manifest referencing icon.png
+      const manifestObj = {
+        name: "مبدل تاریخ",
+        short_name: "تبدیل تاریخ",
+        start_url: ".",
+        display: "standalone",
+        background_color: "#121212",
+        theme_color: "#121212",
+        description: "مبدل تاریخ شمسی، میلادی و قمری",
+        icons: [
+          {
+            src: "icon.png",
+            sizes: "192x192 512x512",
+            type: "image/png"
+          }
+        ]
+      };
+      const manifestStr = JSON.stringify(manifestObj);
+      const manifestBlob = new Blob([manifestStr], { type: 'application/json' });
+      document.getElementById('manifestLink').href = URL.createObjectURL(manifestBlob);
+
+      // 2. Register Inline Service Worker for Offline Cache
+      if ('serviceWorker' in navigator) {
+        const swCode = `
+          const CACHE_NAME = 'date-converter-v2';
+          self.addEventListener('install', (e) => {
+            e.waitUntil(
+              caches.open(CACHE_NAME).then((cache) => cache.addAll(['./', 'icon.png']))
+            );
+          });
+          self.addEventListener('fetch', (e) => {
+            e.respondWith(
+              caches.match(e.request).then((res) => res || fetch(e.request))
+            );
+          });
+        `;
+        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(swBlob);
+        navigator.serviceWorker.register(swUrl).catch(() => {});
+      }
+    })();
+
+    /* ---------------- Data Constants ---------------- */
+    const persianMonths = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+    const hijriMonths = ["محرم", "صفر", "ربیع‌الاول", "ربیع‌الثانی", "جمادی‌الاول", "جمادی‌الثانی", "رجب", "شعبان", "رمضان", "شوال", "ذیقعده", "ذیحجه"];
+    const gregorianMonthsStandard = ["ژانویه", "فوریه", "مارس", "آوریل", "مه", "ژوئن", "ژوئیه", "اوت", "سپتامبر", "اکتبر", "نوامبر", "دسامبر"];
+    const persianWeekdays = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
+
+    const dayWords = [
+      "", "اول", "دوم", "سوم", "چهارم", "پنجم", "ششم", "هفتم", "هشتم", "نهم", "دهم",
+      "یازدهم", "دوازدهم", "سیزدهم", "چهاردهم", "پانزدهم", "شانزدهم", "هفدهم", "هجدهم", "نوزدهم", "بیستم",
+      "بیست و یکم", "بیست و دوم", "بیست و سوم", "بیست و چهارم", "بیست و پنجم", "بیست و ششم", "بیست و هفتم", "بیست و هشتم", "بیست و نهم", "سی‌ام", "سی و یکم"
+    ];
+
+    function toPersianNum(num) {
+      if (num === null || num === undefined) return '';
+      return num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    }
+
+    /* ---------------- State Management ---------------- */
+    let activeCalendar = 'j'; // 'j' = Jalali, 'g' = Gregorian, 'h' = Hijri
+    let selectedYear = 1403;
+    let selectedMonth = 1;
+    let selectedDay = 1;
+
+    /* ---------------- Date Logic & Algorithms ---------------- */
+    function isGregorianLeapYear(year) {
+      return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    }
+
+    function isJalaliLeapYear(jy) {
+      const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178];
+      let bl = breaks.length, gy = jy + 621, leapJ = -14, jp = breaks[0], jm, jump, n, i;
+      for (i = 1; i < bl; i++) { jm = breaks[i]; jump = jm - jp; if (jy < jm) break; leapJ += Math.floor(jump / 33) * 8 + Math.floor((jump % 33) / 4); jp = jm; }
+      n = jy - jp;
+      leapJ += Math.floor(n / 33) * 8 + Math.floor((n % 33 + 3) / 4);
+      if ((jump % 33 === 4) && (jump - n === 4)) leapJ++;
+      let leapG = Math.floor(gy / 4) - Math.floor((Math.floor(gy / 100) + 1) * 3 / 4) - 150;
+      return ((leapJ - leapG) % 33) === 1;
+    }
+
+    function toJalali(gy, gm, gd) {
+      let g_d_m = [0, 31, isGregorianLeapYear(gy) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      let gy2 = (gm > 2) ? (gy + 1) : gy;
+      let days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400);
+      for (let i = 0; i < gm; ++i) days += g_d_m[i];
+      days += gd;
+      let jy = -1595 + 33 * Math.floor(days / 12053);
+      days %= 12053;
+      jy += 4 * Math.floor(days / 1461);
+      days %= 1461;
+      if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+      let jmList = [0, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+      let i;
+      for (i = 1; i < 13 && days >= jmList[i]; ++i) days -= jmList[i];
+      return [jy, i, days + 1];
+    }
+
+    function toGregorian(jy, jm, jd) {
+      let jy2 = jy + 1595;
+      let days = -355668 + (365 * jy2) + Math.floor(jy2 / 33) * 8 + Math.floor(((jy2 % 33) + 3) / 4);
+      for (let i = 1; i < jm; ++i) days += (i <= 6) ? 31 : (i <= 11 ? 30 : 29);
+      days += jd;
+      let gy = 400 * Math.floor(days / 146097);
+      days %= 146097;
+      if (days > 36524) { gy += 100 * Math.floor(--days / 36524); days %= 36524; if (days >= 365) days++; }
+      gy += 4 * Math.floor(days / 1461);
+      days %= 1461;
+      if (days > 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+      let gd = days + 1;
+      let sal_a = [0, 31, isGregorianLeapYear(gy) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      let gm;
+      for (gm = 1; gm <= 12 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
+      return [gy, gm, gd];
+    }
+
+    function toHijri(gy, gm, gd) {
+      try {
+        const date = new Date(gy, gm - 1, gd);
+        const options = { year: 'numeric', month: 'numeric', day: 'numeric', calendar: 'islamic-umalqura' };
+        const parts = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', options).formatToParts(date);
+        let hy, hm, hd;
+        for (const p of parts) {
+          if (p.type === 'year') hy = parseInt(p.value);
+          if (p.type === 'month') hm = parseInt(p.value);
+          if (p.type === 'day') hd = parseInt(p.value);
+        }
+        return [hy, hm, hd];
+      } catch (e) {
+        return [1446, 1, 1];
+      }
+    }
+
+    function toGregorianFromHijri(hy, hm, hd) {
+      let jd = Math.floor((11 * hy + 3) / 30) + 354 * hy + 30 * hm - Math.floor((hm - 1) / 2) + hd + 1948440 - 385;
+      let l = jd + 68569;
+      let n = Math.floor((4 * l) / 146097);
+      l = l - Math.floor((146097 * n + 3) / 4);
+      let i = Math.floor((4000 * (l + 1)) / 1461001);
+      l = l - Math.floor((1461 * i) / 4) + 31;
+      let j = Math.floor((80 * l) / 2447);
+      let gd = l - Math.floor((2447 * j) / 80);
+      l = Math.floor(j / 11);
+      let gm = j + 2 - 12 * l;
+      let gy = 100 * (n - 49) + i + l;
+      return [gy, gm, gd];
+    }
+
+    function getDaysInMonth(calType, year, month) {
+      if (calType === 'j') {
+        if (month <= 6) return 31;
+        if (month <= 11) return 30;
+        return isJalaliLeapYear(year) ? 30 : 29;
+      } else if (calType === 'g') {
+        return new Date(year, month, 0).getDate();
+      } else {
+        return (month % 2 !== 0) ? 30 : 29;
+      }
+    }
+
+    /* ---------------- UI Render & Pickers ---------------- */
+    const monthWheel = document.getElementById('monthWheel');
+    const yearWheel = document.getElementById('yearWheel');
+    const daysGrid = document.getElementById('daysGrid');
+
+    function getYearRange(calType) {
+      if (calType === 'j') return { start: 1300, end: 1500 };
+      if (calType === 'h') return { start: 1400, end: 1500 };
+      return { start: 1930, end: 2050 };
+    }
+
+    function getMonthNames(calType) {
+      if (calType === 'j') return persianMonths;
+      if (calType === 'h') return hijriMonths;
+      return gregorianMonthsStandard;
+    }
+
+    function buildWheelPickers() {
+      const months = getMonthNames(activeCalendar);
+      const { start, end } = getYearRange(activeCalendar);
+
+      monthWheel.innerHTML = '';
+      months.forEach((m, idx) => {
+        const item = document.createElement('div');
+        item.className = 'wheel-item';
+        item.dataset.value = idx + 1;
+        item.textContent = m;
+        monthWheel.appendChild(item);
+      });
+
+      yearWheel.innerHTML = '';
+      for (let y = start; y <= end; y++) {
+        const item = document.createElement('div');
+        item.className = 'wheel-item';
+        item.dataset.value = y;
+        item.textContent = toPersianNum(y);
+        yearWheel.appendChild(item);
+      }
+
+      scrollWheelToValue(monthWheel, selectedMonth);
+      scrollWheelToValue(yearWheel, selectedYear);
+    }
+
+    function scrollWheelToValue(wheel, val) {
+      const items = wheel.querySelectorAll('.wheel-item');
+      items.forEach(item => {
+        if (parseInt(item.dataset.value) === val) {
+          const itemTop = item.offsetTop - wheel.offsetTop - (wheel.clientHeight / 2) + (item.clientHeight / 2);
+          wheel.scrollTop = itemTop;
+        }
+      });
+      highlightSelectedItems();
+    }
+
+    function highlightSelectedItems() {
+      [monthWheel, yearWheel].forEach(wheel => {
+        const items = wheel.querySelectorAll('.wheel-item');
+        const wheelCenter = wheel.getBoundingClientRect().top + wheel.clientHeight / 2;
+        
+        items.forEach(item => {
+          const itemCenter = item.getBoundingClientRect().top + item.clientHeight / 2;
+          if (Math.abs(wheelCenter - itemCenter) < 20) {
+            item.classList.add('selected');
+          } else {
+            item.classList.remove('selected');
+          }
+        });
+      });
+    }
+
+    function setupWheelScrollListener(wheel, callback) {
+      let isScrolling;
+      wheel.addEventListener('scroll', () => {
+        highlightSelectedItems();
+        clearTimeout(isScrolling);
+        isScrolling = setTimeout(() => {
+          const selected = wheel.querySelector('.wheel-item.selected');
+          if (selected) {
+            callback(parseInt(selected.dataset.value));
+          }
+        }, 80);
+      });
+    }
+
+    function renderDaysGrid() {
+      daysGrid.innerHTML = '';
+      const totalDays = getDaysInMonth(activeCalendar, selectedYear, selectedMonth);
+
+      if (selectedDay > totalDays) selectedDay = totalDays;
+
+      for (let d = 1; d <= totalDays; d++) {
+        const dayCell = document.createElement('div');
+        dayCell.className = `day-cell ${d === selectedDay ? 'selected' : ''}`;
+        dayCell.textContent = toPersianNum(d);
+        dayCell.addEventListener('click', () => {
+          selectedDay = d;
+          renderDaysGrid();
+          updateAllCalculations();
+        });
+        daysGrid.appendChild(dayCell);
+      }
+    }
+
+    /* ---------------- Main Conversion Handler ---------------- */
+    function updateAllCalculations() {
+      let gy, gm, gd;
+
+      if (activeCalendar === 'j') {
+        [gy, gm, gd] = toGregorian(selectedYear, selectedMonth, selectedDay);
+      } else if (activeCalendar === 'h') {
+        [gy, gm, gd] = toGregorianFromHijri(selectedYear, selectedMonth, selectedDay);
+      } else {
+        [gy, gm, gd] = [selectedYear, selectedMonth, selectedDay];
+      }
+
+      const [jy, jm, jd] = toJalali(gy, gm, gd);
+      const [hy, hm, hd] = toHijri(gy, gm, gd);
+
+      // Format Header Text: e.g. "سی‌ام مهر ۱۴۰۵"
+      const monthNames = getMonthNames(activeCalendar);
+      const dayNameWord = dayWords[selectedDay] || toPersianNum(selectedDay);
+      document.getElementById('selectedMonthHeader').textContent = 
+        `${dayNameWord} ${monthNames[selectedMonth - 1]} ${toPersianNum(selectedYear)}`;
+
+      // Jalali Result
+      document.getElementById('resultJalali').textContent = 
+        `${toPersianNum(jd)} ${persianMonths[jm - 1]} (${toPersianNum(jm)}) ${toPersianNum(jy)}`;
+
+      // Hijri Result
+      document.getElementById('resultHijri').textContent = 
+        `${toPersianNum(hd)} ${hijriMonths[hm - 1]} (${toPersianNum(hm)}) ${toPersianNum(hy)}`;
+
+      // Gregorian Result
+      document.getElementById('resultGregorian').textContent = 
+        `${toPersianNum(gd)} ${gregorianMonthsStandard[gm - 1]} (${toPersianNum(gm)}) ${toPersianNum(gy)}`;
+
+      // Weekday Calculation
+      const dateObj = new Date(gy, gm - 1, gd);
+      const dayIdx = dateObj.getDay();
+      const persianWeekdayIndex = (dayIdx + 1) % 7;
+      document.getElementById('resultWeekday').textContent = persianWeekdays[persianWeekdayIndex];
+    }
+
+    /* ---------------- Today's Date Initializer ---------------- */
+    function setToCurrentDate() {
+      const today = new Date();
+      const [jy, jm, jd] = toJalali(today.getFullYear(), today.getMonth() + 1, today.getDate());
+
+      if (activeCalendar === 'j') {
+        selectedYear = jy;
+        selectedMonth = jm;
+        selectedDay = jd;
+      } else if (activeCalendar === 'g') {
+        selectedYear = today.getFullYear();
+        selectedMonth = today.getMonth() + 1;
+        selectedDay = today.getDate();
+      } else if (activeCalendar === 'h') {
+        const [hy, hm, hd] = toHijri(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        selectedYear = hy;
+        selectedMonth = hm;
+        selectedDay = hd;
+      }
+    }
+
+    /* ---------------- Theme Toggle Logic ---------------- */
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'light') {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      } else {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      }
+      localStorage.setItem('app-theme', theme);
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      setTheme(currentTheme);
+    });
+
+    /* Today Button Action Listener */
+    document.getElementById('todayBtn').addEventListener('click', () => {
+      setToCurrentDate();
+      buildWheelPickers();
+      renderDaysGrid();
+      updateAllCalculations();
+    });
+
+    /* ---------------- Event Listeners & Tab Switches ---------------- */
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+
+        activeCalendar = e.target.dataset.type;
+        
+        setToCurrentDate();
+        buildWheelPickers();
+        renderDaysGrid();
+        updateAllCalculations();
+      });
+    });
+
+    setupWheelScrollListener(monthWheel, (val) => {
+      selectedMonth = val;
+      renderDaysGrid();
+      updateAllCalculations();
+    });
+
+    setupWheelScrollListener(yearWheel, (val) => {
+      selectedYear = val;
+      renderDaysGrid();
+      updateAllCalculations();
+    });
+
+    /* ---------------- App Initialization ---------------- */
+    function init() {
+      const savedTheme = localStorage.getItem('app-theme') || 
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      setTheme(savedTheme);
+
+      activeCalendar = 'j';
+      setToCurrentDate();
+
+      buildWheelPickers();
+      renderDaysGrid();
+      updateAllCalculations();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
 
-    <header>
-
-        <button id="back-button">
-
-            ← بازگشت
-
-        </button>
-
-        <div id="iframe-title">
-
-        </div>
-
-    </header>
-
-    <iframe
-        id="content-iframe"
-        title="LMO"></iframe>
-
-</div>
-
-<script>
-
-const launcherButtons=document.querySelectorAll(".app-button");
-
-const launcherView=document.getElementById("launcher-view");
-
-const iframeView=document.getElementById("iframe-view");
-
-const iframe=document.getElementById("content-iframe");
-
-const iframeTitle=document.getElementById("iframe-title");
-
-const backButton=document.getElementById("back-button");
-
-launcherButtons.forEach(button=>{
-
-button.addEventListener("click",()=>{
-
-const url=button.dataset.url;
-
-const title=button.dataset.title;
-
-/* لینک اینترنتی */
-
-if(url.startsWith("http")){
-
-window.location.href=url;
-
-return;
-
-}
-
-/* فایل محلی */
-
-iframe.src=url;
-
-iframeTitle.textContent=title;
-
-launcherView.style.display="none";
-
-iframeView.style.display="flex";
-
-});
-
-});
-
-backButton.addEventListener("click",()=>{
-
-iframe.src="about:blank";
-
-iframeTitle.textContent="";
-
-iframeView.style.display="none";
-
-launcherView.style.display="flex";
-
-});
-
-window.addEventListener("resize",()=>{
-
-iframe.style.height="calc(100vh - 72px)";
-
-});
-
-window.dispatchEvent(new Event("resize"));
-
-</script>
-<div id="iframe-view">
-
-    <header>
-
-        <button id="back-button">
-
-            ← بازگشت
-
-        </button>
-
-        <div id="iframe-title">
-
-        </div>
-
-    </header>
-
-    <iframe
-        id="content-iframe"
-        title="LMO"></iframe>
-
-</div>
-
-<script>
-
-const launcherButtons=document.querySelectorAll(".app-button");
-
-const launcherView=document.getElementById("launcher-view");
-
-const iframeView=document.getElementById("iframe-view");
-
-const iframe=document.getElementById("content-iframe");
-
-const iframeTitle=document.getElementById("iframe-title");
-
-const backButton=document.getElementById("back-button");
-
-launcherButtons.forEach(button=>{
-
-button.addEventListener("click",()=>{
-
-const url=button.dataset.url;
-
-const title=button.dataset.title;
-
-/* لینک اینترنتی */
-
-if(url.startsWith("http")){
-
-window.location.href=url;
-
-return;
-
-}
-
-/* فایل محلی */
-
-iframe.src=url;
-
-iframeTitle.textContent=title;
-
-launcherView.style.display="none";
-
-iframeView.style.display="flex";
-
-});
-
-});
-
-backButton.addEventListener("click",()=>{
-
-iframe.src="about:blank";
-
-iframeTitle.textContent="";
-
-iframeView.style.display="none";
-
-launcherView.style.display="flex";
-
-});
-
-window.addEventListener("resize",()=>{
-
-iframe.style.height="calc(100vh - 72px)";
-
-});
-
-window.dispatchEvent(new Event("resize"));
-
-</script>
